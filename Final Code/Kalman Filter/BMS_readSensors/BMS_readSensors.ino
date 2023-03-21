@@ -9,7 +9,7 @@ const int relayPin = 8;
 const int ledPin1 = 5;
 const int ledPin2 = 7;
 
-// Sensors: global variables are sent by sendESP()
+// Sensors: 
 //Current
 Adafruit_INA219 ina219;
 float accumCurrent;
@@ -40,13 +40,11 @@ void loop() {
     serial_in[numByte] = '\0';
     if (serial_in[0] == 49) {// ASCII character
       float avgOCV = getOCV();
-      //digitalWrite(ledPin2, HIGH);
       Serial.print(avgOCV);
     } 
     else if (serial_in[0] == 50) {// measure sampling current
       getCurrent();
       Serial.println(currentCounter);// current is being sampled
-      //digitalWrite(ledPin2, LOW);
     } 
     else if (serial_in[0] == 51) {// measure avg current
       float avgCurrent = getAvgCurrent();
