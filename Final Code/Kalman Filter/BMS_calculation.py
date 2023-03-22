@@ -1,6 +1,7 @@
 import numpy as np
 import serial
 import time 
+import pandas as pd
 
 # ================= Set up ====================
 serialPort = 'COM4'
@@ -29,7 +30,7 @@ fitOrder = 8
 # ================= Variables =====================
 # Sensors, initialization
 var_OCV = 0
-var_currentCounter = 1
+var_currentCounter = 0
 var_current = 0
 
 # CC
@@ -43,14 +44,11 @@ last_P = np.array([[5, 0], [0, 0.3]])
 
 #Time
 currentTime = 0
-
+prev_SOC_time = 0
 prev_SamplingCurrent = 0
-prev_Current = 0
-prev_OCV = 0
 
 interval_SamplingCurrent = 0.5
-interval_Current = 5
-interval_OCV = 20
+interval_SOC = 20
 
 # ================= Program =======================
 def getData(task):
@@ -115,21 +113,17 @@ def KF( deltaT , measuredSOC, measuredCurrent):
     last_P = np.matmul(np.matmul((I - K), P), np.transpose(I - K)) + np.matmul(np.matmul(K, R), np.transpose(K))
     return last_x[0]
 
-def calculate_KF_SOC():
-    global SOC3, SOC1
+def calculate_SOC():
+    getData(READ_AVG_CURRENT)
     getData(READ_OCV)
     SOC1 = OCVtoSOC(var_OCV, fitOrder) 
-    KF_res = KF(interval_OCV, SOC1, var_current )
-    SOC3 = float('.'.join(str(ele) for ele in KF_res))
-
-def calculate_CC_SOC():
-    getData(READ_AVG_CURRENT) 
-    SOC2 = CC_SOC(interval_Current, var_current)
-    current_time = time.time()
-    csvData = ( str(round(current_time - start_time, 2)) + "," + str(round(var_OCV, 2)) + 
+    KF_res = KF(interval_SOC, SOC1, var_current)
+    SOC3 = float('.'.join(str(ele) for ele in KF_res)) 
+    SOC2 = CC_SOC(interval_SOC, var_current)
+    csvData = ( str(round(currentTime, 2)) + "," + str(round(var_OCV, 2)) + 
               "," + str(SOC1) + "," + str(SOC2) + "," + str(SOC3) + "\n" )
     file.write(csvData)
-    print("Time: %.2f, OCV: %.2f, OCV_SOC: %.2f, CC_SOC: %.2f, KF_SOC: %.2f" % (current_time - start_time, var_OCV , SOC1, SOC2, SOC3))
+    print("Time: %.2f, OCV: %.2f, OCV_SOC: %.2f, CC_SOC: %.2f, KF_SOC: %.2f" % (currentTime, var_OCV , SOC1, SOC2, SOC3))
 
 # ================= MAIN ===================
 
@@ -137,7 +131,6 @@ def calculate_CC_SOC():
 getData(READ_OCV)
 print("OCV = %.2f" % var_OCV )
 
-start_time = time.time()
 while True:
     startLoop = time.time()
     if (var_OCV < 2.8):
@@ -146,14 +139,10 @@ while True:
     if ( (currentTime - prev_SamplingCurrent) >= interval_SamplingCurrent ):
         getData(READ_SAMPLING_CURRENT)
         prev_SamplingCurrent = currentTime
-    if ( (currentTime - prev_Current) >= interval_Current ):
-        calculate_CC_SOC()
-        prev_Current = currentTime
-    if ( (currentTime - prev_OCV) >= interval_OCV ):
-        calculate_KF_SOC()
-        prev_OCV = currentTime
-    #endLoop = time.time()
-    currentTime = time.time() - startLoop
+    if ( (currentTime - prev_SOC_time) >= interval_SOC ):
+        calculate_SOC()
+        prev_SOC_time = currentTime
+    endLoop = time.time()
+    currentTime += (endLoop - startLoop)
 print("Out of battery!!!")
-
 
