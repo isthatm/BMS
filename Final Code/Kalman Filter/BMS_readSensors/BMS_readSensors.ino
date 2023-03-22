@@ -65,6 +65,7 @@ void getCurrent() {
 float getAvgCurrent(){
   float avgCurrent = accumCurrent / currentCounter;
   currentCounter = 0;
+  accumCurrent = 0;
   return avgCurrent;
 }
 
