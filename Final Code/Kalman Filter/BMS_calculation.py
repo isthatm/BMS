@@ -109,7 +109,6 @@ def KF( deltaT , measuredSOC, measuredCurrent):
     # Update
     K = np.matmul(P, invS)  # Kalman gain
     last_x = x + np.matmul(K, (x_measurement - x))
-    #last_P = np.matmul((I - K), P)
     last_P = np.matmul(np.matmul((I - K), P), np.transpose(I - K)) + np.matmul(np.matmul(K, R), np.transpose(K))
     return last_x[0]
 
