@@ -91,7 +91,7 @@ def CC_SOC (deltaT, current):
 def KF( deltaT , measuredSOC, measuredCurrent): 
     global last_x, last_P
     x_measurement = np.array([[measuredSOC], [measuredCurrent]])   # State vector
-    R = np.array([[1, 0], [0, 0.2]])  # measurement noise
+    R = np.array([[1.0595, -5.72E-6], [-5.72E-6, 4.71E-6]])  # measurement noise
     H = ([[1, 0], [0, 1]])    # Observation matrix
     I = ([[1, 0], [0, 1]])    # Identity matrix
 
