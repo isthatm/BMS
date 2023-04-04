@@ -1,7 +1,7 @@
 import numpy as np
 import serial
 import time 
-import pandas as pd
+#import pandas as pd
 
 # ================= Set up ====================
 serialPort = 'COM4'
