@@ -1,6 +1,6 @@
 import numpy as np
 import serial
-import time 
+ 
 
 
 # ================= Set up ====================
