@@ -130,18 +130,18 @@ def calculate_SOC():
 getData(READ_OCV)
 print("OCV = %.2f" % var_OCV )
 
-# while True:
-#     startLoop = time.time()
-#     if (var_OCV < 2.8):
-#         file.close()
-#         break
-#     if ( (currentTime - prev_SamplingCurrent) >= interval_SamplingCurrent ):
-#         getData(READ_SAMPLING_CURRENT)
-#         prev_SamplingCurrent = currentTime
-#     if ( (currentTime - prev_SOC_time) >= interval_SOC ):
-#         calculate_SOC()
-#         prev_SOC_time = currentTime
-#     endLoop = time.time()
-#     currentTime += (endLoop - startLoop)
-# print("Out of battery!!!")
+while True:
+    startLoop = time.time()
+    if (var_OCV < 2.8):
+        file.close()
+        break
+    if ( (currentTime - prev_SamplingCurrent) >= interval_SamplingCurrent ):
+        getData(READ_SAMPLING_CURRENT)
+        prev_SamplingCurrent = currentTime
+    if ( (currentTime - prev_SOC_time) >= interval_SOC ):
+        calculate_SOC()
+        prev_SOC_time = currentTime
+    endLoop = time.time()
+    currentTime += (endLoop - startLoop)
+print("Out of battery!!!")
 
