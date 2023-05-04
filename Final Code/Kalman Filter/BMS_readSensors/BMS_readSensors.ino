@@ -42,7 +42,7 @@ void loop() {
       float avgOCV = getOCV();
       Serial.print(avgOCV);
     } 
-    else if (serial_in[0] == 50) {// measure sampling current
+    else if (serial_in[0] == 50) { // measure sampling current
       getCurrent();
       Serial.println(currentCounter);// current is being sampled
     } 
@@ -81,7 +81,7 @@ float getOCV() {
     counter++;
   }
   float OCV = periodVoltageSum / counter;
-  digitalWrite(relayPin, HIGH);  // disconnect the load for OCV measurement
+  digitalWrite(relayPin, HIGH);  
   return OCV;
 }
 
