@@ -10,3 +10,6 @@ runs the algorithm.
 - Since we realized that Arduino UNO could not run KF only more than a week before the deadline, we didn't have enough
 time add IoT features to this program. For anyone interested in this project, we suggest Raspberry Pi or STM32 as your MCU
 for IoT applications.
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/86e3f9d4-9d87-4b8b-90fc-c08728e3f533" width="500">
+</p>
